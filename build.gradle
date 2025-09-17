@@ -1,0 +1,57 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.8.21"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "maven-publish"
+}
+
+group "me.xadia"
+version "1.0.0"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT"
+    implementation "co.aikar:acf-paper:0.5.1-SNAPSHOT"
+
+    implementation("net.dv8tion:JDA:5.0.0-alpha.5") {
+        exclude module: "opus-java"
+    }
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.31"
+    implementation "com.github.ben-manes.caffeine:caffeine:2.9.3"
+    implementation "org.reflections:reflections:0.10.2"
+
+    implementation "io.liftgate.flavor:flavor:0.1.8"
+    compileOnly "gg.scala.store:spigot:0.1.0"
+
+    implementation "me.lucko:helper:5.6.14"
+}
+
+compileKotlin {
+    kotlinOptions.javaParameters = true
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+shadowJar {
+    archiveClassifier.set("")
+    archiveFileName = "authy.jar"
+
+    exclude "**/*.kotlin_metadata"
+    exclude "**/*.kotlin_builtins"
+    exclude "META-INF/"
+
+    relocate "org.reflections", "me.xadia.authy.reflections"
+}
+
+publishing {
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+    }
+}
+
+tasks.build.dependsOn(shadowJar)

@@ -1,0 +1,5 @@
+name: Authy
+main: me.xadia.authy.Authy
+description: Discord-based 2FA verification plugin.
+version: 1.0.0
+author: xadia
